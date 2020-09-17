@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "_DevExtremeLayout";
+    ViewData["Title"] = "Главная страница";
+}
+
+<div style="text-align:right;margin-bottom:30px">   
+    <p>Отделение</p>
+    <div style="width: 50%; margin-left: auto; margin-right: 0;">
+        @(Html.DevExtreme().SelectBox()
+            .DataSource(d => d.Mvc().Controller("Values").LoadAction("GetDeptsExt").LoadMode(DataSourceLoadMode.Raw))
+            .DisplayExpr("Dept")
+            .ValueExpr("Dept")
+            .OnValueChanged(@<text>
+                 
+                function(data) {
+                    var dataGrid = $("#gridContainer").dxDataGrid("instance");
+                    if (data.value == "Все")
+                        dataGrid.clearFilter();
+                    else
+                        dataGrid.filter(["Dept", "=", data.value]);
+                }
+            </text>)
+        )
+    </div>
+</div>
+<div>
+    @(Html.DevExtreme().DataGrid<Domain.BsModel>()
+    .ID("gridContainer")
+    .DataSource(d => d.Mvc().Controller("Values").LoadAction("GetPatients"))
+    .RemoteOperations(true)
+    .Scrolling(s => s
+        .Mode(GridScrollingMode.Virtual)
+        .RowRenderingMode(GridRowRenderingMode.Virtual)
+    )
+    .Paging(p => p.PageSize(100))
+    .OnRowClick("OnRowClick")
+    .HeaderFilter(headerFilter => headerFilter.Visible(true))
+    .Grouping(grouping => {
+        grouping.AutoExpandAll(true);
+        grouping.ContextMenuEnabled(true);
+    })
+    .Columns(columns => {
+        columns.AddFor(m => m.FIO);
+        columns.AddFor(m => m.Dept);
+        columns.AddFor(m => m.Sex);
+        columns.AddFor(m => m.IVL);
+    })
+    .ShowBorders(true)
+    .LoadPanel(loadPanel => loadPanel.Enabled(true))
+    .OnContentReady(@<text>
+        function(e) {
+            e.component.option("loadPanel.enabled", false);
+        }
+    </text>)
+    )
+</div>
+<script>
+    function OnRowClick(e) {
+        if (e['rowType'] == 'data') {
+            window.location.href = '/Home/Edit/' + e['data']['Id'];
+        }
+    }
+</script>

@@ -1,0 +1,3 @@
+﻿@using TestBS
+@using TestBS.Models
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
