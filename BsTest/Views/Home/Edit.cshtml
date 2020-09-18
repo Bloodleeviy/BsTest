@@ -4,61 +4,67 @@
     @model Domain.PatientModel;
     var rusifiedBoolean = new List<string>() { "Да", "Нет" };
 }
+@if (Model == null)
+{
 
+}
+else
+{
 <h2>@("Редактирование данных:" + Model.FIO)</h2>
 
-@using (Html.BeginForm())
-{
-    using (Html.DevExtreme().ValidationGroup())
+    @using (Html.BeginForm())
     {
-        @Html.AntiForgeryToken()
-        @(Html.DevExtreme().Form<Domain.PatientModel>()
-                        .ShowValidationSummary(true)
-                        .Items(items =>
-                        {
+        using (Html.DevExtreme().ValidationGroup())
+        {
+            @Html.AntiForgeryToken()
+            @(Html.DevExtreme().Form<Domain.PatientModel>()
+                            .ShowValidationSummary(true)
+                            .Items(items =>
+                            {
 
-                            items.AddSimpleFor(m => m.FIO);
+                                items.AddSimpleFor(m => m.FIO);
 
-                            items.AddSimpleFor(m => m.Dept_Id)
-                            .Editor(e => e
-                            .SelectBox()
-                            .DataSource(d => d.Mvc()
-                                .Controller("Values")
-                                .LoadAction("GetDepts")
-                                .LoadMode(DataSourceLoadMode.Raw))
-                            .DisplayExpr("Dept")
-                            .ValueExpr("Id")
-                            .Value(Model.Dept_Id));
+                                items.AddSimpleFor(m => m.Dept_Id)
+                                .Editor(e => e
+                                .SelectBox()
+                                .DataSource(d => d.Mvc()
+                                    .Controller("Values")
+                                    .LoadAction("GetDepts")
+                                    .LoadMode(DataSourceLoadMode.Raw))
+                                .DisplayExpr("Dept")
+                                .ValueExpr("Id")
+                                .Value(Model.Dept_Id));
 
-                            items.AddSimpleFor(m => m.Sex_Id)
-                            .Editor(e=>e
-                            .RadioGroup()
-                            .DataSource(d => d.Mvc()
-                                .Controller("Values")
-                                .LoadAction("GetGenders")
-                                .LoadMode(DataSourceLoadMode.Raw))
-                            .DisplayExpr("Sex")
-                            .ValueExpr("Id")
-                            .Value(Model.Sex_Id));
+                                items.AddSimpleFor(m => m.Sex_Id)
+                                .Editor(e=>e
+                                .RadioGroup()
+                                .DataSource(d => d.Mvc()
+                                    .Controller("Values")
+                                    .LoadAction("GetGenders")
+                                    .LoadMode(DataSourceLoadMode.Raw))
+                                .DisplayExpr("Sex")
+                                .ValueExpr("Id")
+                                .Value(Model.Sex_Id));
 
-                            items.AddSimpleFor(m => m.IVL)
-                            .Editor(e => e
-                            .RadioGroup()
-                            .DataSource(rusifiedBoolean)
-                            .Value(Model.IVL)); 
-                        }).FormData(Model))
+                                items.AddSimpleFor(m => m.IVL)
+                                .Editor(e => e
+                                .RadioGroup()
+                                .DataSource(rusifiedBoolean)
+                                .Value(Model.IVL)); 
+                            }).FormData(Model))
 
 
+        }
+        @(Html.DevExtreme().ValidationSummary()
+                    .ID("summary")
+                )
+
+        @(Html.DevExtreme()
+                .Button()
+                .Type(ButtonType.Success)
+                .Text("Сохранить")
+                .UseSubmitBehavior(true)
+            );
     }
-    @(Html.DevExtreme().ValidationSummary()
-                .ID("summary")
-            )
 
-    @(Html.DevExtreme()
-            .Button()
-            .Type(ButtonType.Success)
-            .Text("Сохранить")
-            .UseSubmitBehavior(true)
-        );
 }
-

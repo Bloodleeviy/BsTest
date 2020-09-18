@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="script.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.35" />
     <PackageReference Include="DevExtreme.AspNet.Core" Version="20.1.7" />
     <PackageReference Include="DevExtreme.AspNet.Data" Version="2.7.1" />
